@@ -1,0 +1,127 @@
+#app
+    header.mdc-top-app-bar.mdc-top-app-bar--fixed
+        .mdc-top-app-bar__row
+            section.mdc-top-app-bar__section.mdc-top-app-bar__section--align-start
+                a#appbar-menu.material-icons.mdc-top-app-bar__navigation-icon(href="#")
+                    Icon menu
+                span.mdc-top-app-bar__title Sales Manager
+
+    aside.mdc-drawer.mdc-drawer--temporary.mdc-typography
+        nav.mdc-drawer__drawer
+            nav.mdc-drawer__content.mdc-list
+                a#d-item-sales.mdc-list-item.mdc-list-item--activated(@click="selectDrawerItem('#d-item-sales')")
+                    Icon.material-icons.mdc-list-item__graphic shop
+                    p Sales
+                a#d-item-stats.mdc-list-item(@click="selectDrawerItem('#d-item-stats')")
+                    Icon.material-icons.mdc-list-item__graphic timeline
+                    p Stats
+                a#d-item-products.mdc-list-item(@click="selectDrawerItem('#d-item-products')")
+                    Icon.material-icons.mdc-list-item__graphic view_list
+                    p Products
+                a#d-item-about.mdc-list-item(@click="selectDrawerItem('#d-item-about')")
+                    Icon.material-icons.mdc-list-item__graphic info
+                    p About
+    #top-spacer
+    div(v-if="selection == 'sales'")
+        h3.sub-title.mdc-typography--overline Sales
+        ul.mdc-list.mdc-list--two-line
+            li.mdc-list-divider(role="separator")
+            div(v-for="(item, idx) in sales")
+                li.mdc-list-item(@click="makeSnackbar(idx)")
+                    span.mdc-list-item__text {{ item.product.name }}
+                        span.mdc-list-item__secondary-text ¥{{ item.product.price }} ー {{ item.date }}
+                li.mdc-list-divider(role="separator")
+        //- Use spinner?
+        button#fab-add-sale.mdc-fab.material-icons(@click="showDialog('AddSale', $event)")
+            span.mdc-fab__icon add
+    div(v-else-if="selection == 'stats'")
+        h3.sub-title.mdc-typography--overline Stats
+        .stats-card.mdc-card
+            h6.mdc-typography--headline6 Total
+            p.mdc-typography--subtitle1 Total Sales
+            h2.mdc-typography--headline2 ¥{{ totalSales }}
+        .stats-card.mdc-card
+            h6.mdc-typography--headline6 Cost
+            p.mdc-typography--subtitle1 Cost of products
+            h2.mdc-typography--headline2 ¥{{ totalCosts }}
+        .stats-card.mdc-card
+            h6.mdc-typography--headline6 Profit
+            p.mdc-typography--subtitle1 Profit of Sales
+            h2.mdc-typography--headline2 ¥{{ totalSales - totalCosts }}
+        button#fab-add-sale.mdc-fab.material-icons(@click="showDialog('AddSale', $event)")
+            span.mdc-fab__icon add
+    div(v-else-if="selection == 'products'")
+        h3.sub-title.mdc-typography--overline Products
+        ul.mdc-list.mdc-list--two-line
+            li.mdc-list-divider(role="separator")
+            div(v-for="(item, idx) in products")
+                li.mdc-list-item(@click="makeSnackbar(idx)")
+                    span.mdc-list-item__text {{ item.name }}
+                        span.mdc-list-item__secondary-text ¥{{ item.price }}
+                li.mdc-list-divider(role="separator")
+        button#fab-add-product.mdc-fab.material-icons(@click="showDialog('AddProduct', $event)")
+            span.mdc-fab__icon add
+    div(v-else-if="selection == 'about'")
+        h3.sub-title.mdc-typography--overline About
+        ul.mdc-list.mdc-list--two-line
+            li.mdc-list-divider(role="separator")
+            li.mdc-list-item
+                span.mdc-list-item__text Creator
+                    span.mdc-list-item__secondary-text Kosuke Takahashi
+            li.mdc-list-divider(role="separator")
+            li.mdc-list-item
+                span.mdc-list-item__text Version
+                    span.mdc-list-item__secondary-text beta 1.0
+            li.mdc-list-divider(role="separator")
+            li.mdc-list-item
+                span.mdc-list-item__text License
+                    span.mdc-list-item__secondary-text Apache 2.0
+            li.mdc-list-divider(role="separator")
+            li.mdc-list-item
+                span.mdc-list-item__text Using following libraries:
+                    span.mdc-list-item__secondary-text Material Components for the web, Vue.js
+            li.mdc-list-divider(role="separator")
+aside#sale-dialog.mdc-dialog(aria-labelledby="mdc-dialog-label" aria-describedby="mdc-dialog-description")
+    .mdc-dialog__surface
+        header.mdc-dialog__header
+            h2#sale-dialog-title.mdc-dialog__header__title Add Items?
+        section#sale-dialog-body.mdc-dialog__body.mdc-dialog__body--scrollable
+            ul#sale-dialog-body-ul.mdc-list
+        footer.mdc-dialog__footer
+            button.mdc-button.mdc-dialog__footer__button.mdc-dialog__footer__button--cancel Cancel
+    .mdc-dialog__barkdrop
+
+aside#product-dialog.mdc-dialog(aria-labelledby="mdc-dialog-label" aria-describedby="mdc-dialog-description")
+    .mdc-dialog__surface
+        header.mdc-dialog__header
+            h2#product-dialog-title.mdc-dialog__header__title Add Product
+        section#product-dialog-body.mdc-dialog__body
+            form(name="addProductForm")
+                #add-prod-name-field.mdc-text-field
+                    input#add-prod-name-input.mdc-text-field__input(type="text" name="productname" value="")
+                    label#add-prod-name-label.mdc-floating-label(for="add-prod-name-input") Product Name
+                    .mdc-line-ripple
+                #add-prod-price-field.mdc-text-field
+                    input#add-prod-price-input.mdc-text-field__input(type="number" name="price" value="")
+                    label#add-prod-price-label.mdc-floating-label(for="add-prod-price-input") Price
+                    .mdc-line-ripple
+                #add-prod-cost-field.mdc-text-field
+                    input#add-prod-cost-input.mdc-text-field__input(type="number" name="cost" value="")
+                    label#add-prod-cost-label.mdc-floating-label(for="add-prod-cost-input") Cost
+                    .mdc-line-ripple
+        footer.mdc-dialog__footer
+            button.mdc-button.mdc-dialog__footer__button.mdc-dialog__footer__button--cancel Calcel
+            button.mdc-button.mdc-dialog__footer__button.mdc-dialog__footer__button--accept Add
+    .mdc-dialog__backdrop
+
+.mdc-snackbar(aria-live="assertive" aria-hidden="true" aria-atomic="true")
+    .mdc-snackbar__text
+    .mdc-snackbar__action_wrapper
+        button.mdc-snackbar__action-button
+
+//- 本番 ↓
+//- https://cdn.jsdelivr.net/npm/vue
+//- 開発用 ↓
+script(src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js")
+script(src="./scripts/script.bundle.js")
+script(src="./scripts/style.bundle.js")

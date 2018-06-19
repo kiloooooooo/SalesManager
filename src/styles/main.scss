@@ -1,0 +1,60 @@
+@import "@material/button/mdc-button";
+@import "@material/top-app-bar/mdc-top-app-bar";
+@import "@material/drawer/mdc-drawer";
+@import "@material/list/mdc-list";
+@import "@material/typography/mdc-typography";
+@import "@material/card/mdc-card";
+@import "@material/snackbar/mdc-snackbar";
+@import "@material/fab/mdc-fab";
+@import "@material/dialog/mdc-dialog";
+@import "@material/textfield/mdc-text-field";
+
+body {
+    height: 100%;
+    margin: 0px;
+    background: #FAFAFA;
+}
+
+.mdc-top-app-bar--fixed {
+    z-index: 8;
+}
+
+.mdc-drawer {
+    z-index: 9;
+}
+
+.mdc-fab {
+    position: fixed;
+    bottom: 1rem;
+    right: 1rem;
+}
+
+#top-spacer {
+    height: 56px;
+    background: #FFFFFF;
+}
+
+.mdc-card {
+    margin: 8px;
+    padding: 8px;
+}
+
+.mdc-typography--headline6 {
+    margin: 4px;
+}
+
+.mdc-typography--subtitle1 {
+    margin: 4px;
+}
+
+.sub-title {
+    padding-left: 16px;
+    padding-right: 16px;
+}
+
+.stats-card {
+    .mdc-typography--headline2 {
+        margin: 24px;
+        text-align: center;
+    }
+}

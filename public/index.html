@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Sales Manager</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=false">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, user-scalable=no">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  </head>
+  <body>
+    <div id="app">
+      <header class="mdc-top-app-bar mdc-top-app-bar--fixed">
+        <div class="mdc-top-app-bar__row">
+          <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start"><a class="material-icons mdc-top-app-bar__navigation-icon" id="appbar-menu" href="#">
+              <Icon>menu</Icon></a><span class="mdc-top-app-bar__title">Sales Manager</span></section>
+        </div>
+      </header>
+      <aside class="mdc-drawer mdc-drawer--temporary mdc-typography">
+        <nav class="mdc-drawer__drawer">
+          <nav class="mdc-drawer__content mdc-list"><a class="mdc-list-item mdc-list-item--activated" id="d-item-sales" @click="selectDrawerItem('#d-item-sales')">
+              <Icon class="material-icons mdc-list-item__graphic">shop</Icon>
+              <p>Sales</p></a><a class="mdc-list-item" id="d-item-stats" @click="selectDrawerItem('#d-item-stats')">
+              <Icon class="material-icons mdc-list-item__graphic">timeline</Icon>
+              <p>Stats</p></a><a class="mdc-list-item" id="d-item-products" @click="selectDrawerItem('#d-item-products')">
+              <Icon class="material-icons mdc-list-item__graphic">view_list</Icon>
+              <p>Products</p></a><a class="mdc-list-item" id="d-item-about" @click="selectDrawerItem('#d-item-about')">
+              <Icon class="material-icons mdc-list-item__graphic">info</Icon>
+              <p>About</p></a></nav>
+        </nav>
+      </aside>
+      <div id="top-spacer"></div>
+      <div v-if="selection == 'sales'">
+        <h3 class="sub-title mdc-typography--overline">Sales</h3>
+        <ul class="mdc-list mdc-list--two-line">
+          <li class="mdc-list-divider" role="separator"></li>
+          <div v-for="(item, idx) in sales">
+            <li class="mdc-list-item" @click="makeSnackbar(idx)"><span class="mdc-list-item__text">{{ item.product.name }}<span class="mdc-list-item__secondary-text">¥{{ item.product.price }} ー {{ item.date }}</span></span></li>
+            <li class="mdc-list-divider" role="separator"></li>
+          </div>
+        </ul>
+        <button class="mdc-fab material-icons" id="fab-add-sale" @click="showDialog('AddSale', $event)"><span class="mdc-fab__icon">add</span></button>
+      </div>
+      <div v-else-if="selection == 'stats'">
+        <h3 class="sub-title mdc-typography--overline">Stats</h3>
+        <div class="stats-card mdc-card">
+          <h6 class="mdc-typography--headline6">Total</h6>
+          <p class="mdc-typography--subtitle1">Total Sales</p>
+          <h2 class="mdc-typography--headline2">¥{{ totalSales }}</h2>
+        </div>
+        <div class="stats-card mdc-card">
+          <h6 class="mdc-typography--headline6">Cost</h6>
+          <p class="mdc-typography--subtitle1">Cost of products</p>
+          <h2 class="mdc-typography--headline2">¥{{ totalCosts }}</h2>
+        </div>
+        <div class="stats-card mdc-card">
+          <h6 class="mdc-typography--headline6">Profit</h6>
+          <p class="mdc-typography--subtitle1">Profit of Sales</p>
+          <h2 class="mdc-typography--headline2">¥{{ totalSales - totalCosts }}</h2>
+        </div>
+        <button class="mdc-fab material-icons" id="fab-add-sale" @click="showDialog('AddSale', $event)"><span class="mdc-fab__icon">add</span></button>
+      </div>
+      <div v-else-if="selection == 'products'">
+        <h3 class="sub-title mdc-typography--overline">Products</h3>
+        <ul class="mdc-list mdc-list--two-line">
+          <li class="mdc-list-divider" role="separator"></li>
+          <div v-for="(item, idx) in products">
+            <li class="mdc-list-item" @click="makeSnackbar(idx)"><span class="mdc-list-item__text">{{ item.name }}<span class="mdc-list-item__secondary-text">¥{{ item.price }}</span></span></li>
+            <li class="mdc-list-divider" role="separator"></li>
+          </div>
+        </ul>
+        <button class="mdc-fab material-icons" id="fab-add-product" @click="showDialog('AddProduct', $event)"><span class="mdc-fab__icon">add</span></button>
+      </div>
+      <div v-else-if="selection == 'about'">
+        <h3 class="sub-title mdc-typography--overline">About</h3>
+        <ul class="mdc-list mdc-list--two-line">
+          <li class="mdc-list-divider" role="separator"></li>
+          <li class="mdc-list-item"><span class="mdc-list-item__text">Creator<span class="mdc-list-item__secondary-text">Kosuke Takahashi</span></span></li>
+          <li class="mdc-list-divider" role="separator"></li>
+          <li class="mdc-list-item"><span class="mdc-list-item__text">Version<span class="mdc-list-item__secondary-text">beta 1.0</span></span></li>
+          <li class="mdc-list-divider" role="separator"></li>
+          <li class="mdc-list-item"><span class="mdc-list-item__text">License<span class="mdc-list-item__secondary-text">Apache 2.0</span></span></li>
+          <li class="mdc-list-divider" role="separator"></li>
+          <li class="mdc-list-item"><span class="mdc-list-item__text">Using following libraries:<span class="mdc-list-item__secondary-text">Material Components for the web, Vue.js</span></span></li>
+          <li class="mdc-list-divider" role="separator"></li>
+        </ul>
+      </div>
+    </div>
+    <aside class="mdc-dialog" id="sale-dialog" aria-labelledby="mdc-dialog-label" aria-describedby="mdc-dialog-description">
+      <div class="mdc-dialog__surface">
+        <header class="mdc-dialog__header">
+          <h2 class="mdc-dialog__header__title" id="sale-dialog-title">Add Items?</h2>
+        </header>
+        <section class="mdc-dialog__body mdc-dialog__body--scrollable" id="sale-dialog-body">
+          <ul class="mdc-list" id="sale-dialog-body-ul"></ul>
+        </section>
+        <footer class="mdc-dialog__footer">
+          <button class="mdc-button mdc-dialog__footer__button mdc-dialog__footer__button--cancel">Cancel</button>
+        </footer>
+      </div>
+      <div class="mdc-dialog__barkdrop"></div>
+    </aside>
+    <aside class="mdc-dialog" id="product-dialog" aria-labelledby="mdc-dialog-label" aria-describedby="mdc-dialog-description">
+      <div class="mdc-dialog__surface">
+        <header class="mdc-dialog__header">
+          <h2 class="mdc-dialog__header__title" id="product-dialog-title">Add Product</h2>
+        </header>
+        <section class="mdc-dialog__body" id="product-dialog-body">
+          <form name="addProductForm">
+            <div class="mdc-text-field" id="add-prod-name-field">
+              <input class="mdc-text-field__input" id="add-prod-name-input" type="text" name="productname" value="">
+              <label class="mdc-floating-label" id="add-prod-name-label" for="add-prod-name-input">Product Name</label>
+              <div class="mdc-line-ripple"></div>
+            </div>
+            <div class="mdc-text-field" id="add-prod-price-field">
+              <input class="mdc-text-field__input" id="add-prod-price-input" type="number" name="price" value="">
+              <label class="mdc-floating-label" id="add-prod-price-label" for="add-prod-price-input">Price</label>
+              <div class="mdc-line-ripple"></div>
+            </div>
+            <div class="mdc-text-field" id="add-prod-cost-field">
+              <input class="mdc-text-field__input" id="add-prod-cost-input" type="number" name="cost" value="">
+              <label class="mdc-floating-label" id="add-prod-cost-label" for="add-prod-cost-input">Cost</label>
+              <div class="mdc-line-ripple"></div>
+            </div>
+          </form>
+        </section>
+        <footer class="mdc-dialog__footer">
+          <button class="mdc-button mdc-dialog__footer__button mdc-dialog__footer__button--cancel">Calcel</button>
+          <button class="mdc-button mdc-dialog__footer__button mdc-dialog__footer__button--accept">Add</button>
+        </footer>
+      </div>
+      <div class="mdc-dialog__backdrop"></div>
+    </aside>
+    <div class="mdc-snackbar" aria-live="assertive" aria-hidden="true" aria-atomic="true">
+      <div class="mdc-snackbar__text"></div>
+      <div class="mdc-snackbar__action_wrapper">
+        <button class="mdc-snackbar__action-button"></button>
+      </div>
+    </div>
+    <script src="script.bundle.js"></script>
+    <script src="style.bundle.js"></script>
+  </body>
+</html>
